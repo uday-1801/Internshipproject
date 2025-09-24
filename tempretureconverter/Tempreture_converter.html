@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature Converter</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .input-glow:focus {
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.4);
+        }
+        
+        .result-card {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            box-shadow: 5px 5px 15px #d1d1d1, -5px -5px 15px #ffffff;
+        }
+        
+        .convert-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            transition: all 0.3s ease;
+        }
+        
+        .convert-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .temperature-icon {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .glass-effect {
+                background: white;
+                border: 1px solid #e5e7eb;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen py-8 px-4">
+    <!-- Header -->
+    <div class="max-w-4xl mx-auto mb-8">
+        <div class="text-center text-white">
+            <h1 class="text-4xl font-bold mb-2">
+                <i class="fas fa-thermometer-half temperature-icon text-5xl mr-3"></i>
+                Temperature Converter
+            </h1>
+            <p class="text-xl opacity-90">Professional Web Application</p>
+            <div class="mt-4 text-sm opacity-75">
+                <p>Developed by: [UDAY PRATAP SINGH]</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application Container -->
+    <div class="max-w-6xl mx-auto">
+        <div class="glass-effect rounded-2xl p-8 shadow-2xl">
+            
+            <!-- Project Information -->
+            <div class="mb-8 bg-white bg-opacity-20 rounded-xl p-6">
+                <h2 class="text-2xl font-semibold text-white mb-4">
+                    <i class="fas fa-info-circle mr-2"></i>Project Overview
+                </h2>
+                <div class="grid md:grid-cols-2 gap-6 text-white">
+                    <div>
+                        <h3 class="font-semibold mb-2">Features:</h3>
+                        <ul class="text-sm space-y-1 opacity-90">
+                            <li><i class="fas fa-check mr-2 text-green-300"></i>Celsius, Fahrenheit & Kelvin conversions</li>
+                            <li><i class="fas fa-check mr-2 text-green-300"></i>Real-time input validation</li>
+                            <li><i class="fas fa-check mr-2 text-green-300"></i>Responsive design</li>
+                            <li><i class="fas fa-check mr-2 text-green-300"></i>Professional UI/UX</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-2">Technologies Used:</h3>
+                        <ul class="text-sm space-y-1 opacity-90">
+                            <li><i class="fab fa-html5 mr-2 text-orange-300"></i>HTML5</li>
+                            <li><i class="fab fa-css3-alt mr-2 text-blue-300"></i>CSS3 & Tailwind CSS</li>
+                            <li><i class="fab fa-js-square mr-2 text-yellow-300"></i>JavaScript ES6+</li>
+                            <li><i class="fas fa-mobile-alt mr-2 text-purple-300"></i>Responsive Design</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Converter Interface -->
+            <div class="grid lg:grid-cols-2 gap-8">
+                
+                <!-- Input Section -->
+                <div class="bg-white bg-opacity-20 rounded-xl p-6">
+                    <h2 class="text-2xl font-semibold text-white mb-6">
+                        <i class="fas fa-edit mr-2"></i>Input Temperature
+                    </h2>
+                    
+                    <!-- Temperature Input -->
+                    <div class="mb-6">
+                        <label class="block text-white font-medium mb-2">Enter Temperature Value:</label>
+                        <input type="number" 
+                               id="temperatureInput" 
+                               class="w-full px-4 py-3 rounded-lg border-2 border-transparent bg-white bg-opacity-90 text-gray-800 font-medium input-glow focus:outline-none focus:border-indigo-500 transition-all duration-300" 
+                               placeholder="e.g., 25, 98.6, -40"
+                               step="0.1">
+                        <div id="inputError" class="text-red-300 text-sm mt-2 hidden">
+                            <i class="fas fa-exclamation-triangle mr-1"></i>
+                            Please enter a valid number
+                        </div>
+                    </div>
+
+                    <!-- Unit Selection -->
+                    <div class="mb-6">
+                        <label class="block text-white font-medium mb-3">Select Input Unit:</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center bg-white bg-opacity-20 rounded-lg p-3 cursor-pointer hover:bg-opacity-30 transition-all">
+                                <input type="radio" name="inputUnit" value="celsius" class="mr-3 text-indigo-600" checked>
+                                <i class="fas fa-temperature-low mr-2 text-blue-300"></i>
+                                <span class="text-white font-medium">Celsius (°C)</span>
+                            </label>
+                            <label class="flex items-center bg-white bg-opacity-20 rounded-lg p-3 cursor-pointer hover:bg-opacity-30 transition-all">
+                                <input type="radio" name="inputUnit" value="fahrenheit" class="mr-3 text-indigo-600">
+                                <i class="fas fa-temperature-high mr-2 text-red-300"></i>
+                                <span class="text-white font-medium">Fahrenheit (°F)</span>
+                            </label>
+                            <label class="flex items-center bg-white bg-opacity-20 rounded-lg p-3 cursor-pointer hover:bg-opacity-30 transition-all">
+                                <input type="radio" name="inputUnit" value="kelvin" class="mr-3 text-indigo-600">
+                                <i class="fas fa-atom mr-2 text-purple-300"></i>
+                                <span class="text-white font-medium">Kelvin (K)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Convert Button -->
+                    <button id="convertBtn" 
+                            class="w-full convert-btn text-white font-semibold py-4 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                        <i class="fas fa-sync-alt mr-2"></i>
+                        Convert Temperature
+                    </button>
+                </div>
+
+                <!-- Results Section -->
+                <div class="bg-white bg-opacity-20 rounded-xl p-6">
+                    <h2 class="text-2xl font-semibold text-white mb-6">
+                        <i class="fas fa-chart-line mr-2"></i>Conversion Results
+                    </h2>
+                    
+                    <div id="resultsContainer" class="space-y-4">
+                        <!-- Celsius Result -->
+                        <div class="result-card rounded-lg p-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-temperature-low text-blue-500 text-2xl mr-3"></i>
+                                    <div>
+                                        <h3 class="font-semibold text-gray-800">Celsius</h3>
+                                        <p class="text-sm text-gray-600">Metric Scale</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div id="celsiusResult" class="text-2xl font-bold text-gray-800">--°C</div>
+                                    <div id="celsiusFormula" class="text-xs text-gray-500 mt-1"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fahrenheit Result -->
+                        <div class="result-card rounded-lg p-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-temperature-high text-red-500 text-2xl mr-3"></i>
+                                    <div>
+                                        <h3 class="font-semibold text-gray-800">Fahrenheit</h3>
+                                        <p class="text-sm text-gray-600">Imperial Scale</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div id="fahrenheitResult" class="text-2xl font-bold text-gray-800">--°F</div>
+                                    <div id="fahrenheitFormula" class="text-xs text-gray-500 mt-1"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kelvin Result -->
+                        <div class="result-card rounded-lg p-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-atom text-purple-500 text-2xl mr-3"></i>
+                                    <div>
+                                        <h3 class="font-semibold text-gray-800">Kelvin</h3>
+                                        <p class="text-sm text-gray-600">Scientific Scale</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div id="kelvinResult" class="text-2xl font-bold text-gray-800">-- K</div>
+                                    <div id="kelvinFormula" class="text-xs text-gray-500 mt-1"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conversion Information -->
+                    <div class="mt-6 bg-white bg-opacity-30 rounded-lg p-4">
+                        <h4 class="font-semibold text-white mb-2">
+                            <i class="fas fa-info mr-2"></i>Temperature Facts
+                        </h4>
+                        <div id="temperatureFacts" class="text-sm text-white opacity-90">
+                            Enter a temperature value to see conversion results and interesting facts!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formula Reference -->
+            <div class="mt-8 bg-white bg-opacity-20 rounded-xl p-6">
+                <h2 class="text-2xl font-semibold text-white mb-4">
+                    <i class="fas fa-calculator mr-2"></i>Conversion Formulas
+                </h2>
+                <div class="grid md:grid-cols-3 gap-6 text-white">
+                    <div class="bg-white bg-opacity-20 rounded-lg p-4">
+                        <h3 class="font-semibold mb-2">Celsius ↔ Fahrenheit</h3>
+                        <div class="text-sm space-y-1">
+                            <p>°F = (°C × 9/5) + 32</p>
+                            <p>°C = (°F - 32) × 5/9</p>
+                        </div>
+                    </div>
+                    <div class="bg-white bg-opacity-20 rounded-lg p-4">
+                        <h3 class="font-semibold mb-2">Celsius ↔ Kelvin</h3>
+                        <div class="text-sm space-y-1">
+                            <p>K = °C + 273.15</p>
+                            <p>°C = K - 273.15</p>
+                        </div>
+                    </div>
+                    <div class="bg-white bg-opacity-20 rounded-lg p-4">
+                        <h3 class="font-semibold mb-2">Fahrenheit ↔ Kelvin</h3>
+                        <div class="text-sm space-y-1">
+                            <p>K = (°F - 32) × 5/9 + 273.15</p>
+                            <p>°F = (K - 273.15) × 9/5 + 32</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Temperature conversion functions
+        const temperatureConverter = {
+            celsiusToFahrenheit: (celsius) => (celsius * 9/5) + 32,
+            celsiusToKelvin: (celsius) => celsius + 273.15,
+            fahrenheitToCelsius: (fahrenheit) => (fahrenheit - 32) * 5/9,
+            fahrenheitToKelvin: (fahrenheit) => (fahrenheit - 32) * 5/9 + 273.15,
+            kelvinToCelsius: (kelvin) => kelvin - 273.15,
+            kelvinToFahrenheit: (kelvin) => (kelvin - 273.15) * 9/5 + 32
+        };
+
+        // Get DOM elements
+        const temperatureInput = document.getElementById('temperatureInput');
+        const convertBtn = document.getElementById('convertBtn');
+        const inputError = document.getElementById('inputError');
+        const celsiusResult = document.getElementById('celsiusResult');
+        const fahrenheitResult = document.getElementById('fahrenheitResult');
+        const kelvinResult = document.getElementById('kelvinResult');
+        const celsiusFormula = document.getElementById('celsiusFormula');
+        const fahrenheitFormula = document.getElementById('fahrenheitFormula');
+        const kelvinFormula = document.getElementById('kelvinFormula');
+        const temperatureFacts = document.getElementById('temperatureFacts');
+
+        // Validation function
+        function validateInput() {
+            const value = temperatureInput.value.trim();
+            if (value === '' || isNaN(value)) {
+                inputError.classList.remove('hidden');
+                return false;
+            }
+            inputError.classList.add('hidden');
+            return true;
+        }
+
+        // Get selected input unit
+        function getSelectedUnit() {
+            return document.querySelector('input[name="inputUnit"]:checked').value;
+        }
+
+        // Generate temperature facts
+        function getTemperatureFacts(celsius) {
+            let facts = [];
+            
+            if (celsius === 0) {
+                facts.push("This is the freezing point of water!");
+            } else if (celsius === 100) {
+                facts.push("This is the boiling point of water at sea level!");
+            } else if (celsius < -40) {
+                facts.push("Extremely cold! This is colder than the coldest inhabited places on Earth.");
+            } else if (celsius < 0) {
+                facts.push("Below freezing point - water would be ice at this temperature.");
+            } else if (celsius >= 37 && celsius <= 38) {
+                facts.push("This is close to normal human body temperature (37°C).");
+            } else if (celsius > 40) {
+                facts.push("Very hot temperature! Could cause heat-related health issues.");
+            } else if (celsius >= 20 && celsius <= 25) {
+                facts.push("Comfortable room temperature range.");
+            }
+
+            const kelvin = temperatureConverter.celsiusToKelvin(celsius);
+            if (kelvin < 273.15) {
+                facts.push("Below 0 Kelvin is impossible - that's absolute zero!");
+            }
+
+            return facts.length > 0 ? facts.join(' ') : 'Temperature converted successfully!';
+        }
+
+        // Main conversion function
+        function convertTemperature() {
+            if (!validateInput()) return;
+
+            const inputValue = parseFloat(temperatureInput.value);
+            const inputUnit = getSelectedUnit();
+            let celsius, fahrenheit, kelvin;
+            let formulas = {};
+
+            // Convert input to all three scales
+            switch (inputUnit) {
+                case 'celsius':
+                    celsius = inputValue;
+                    fahrenheit = temperatureConverter.celsiusToFahrenheit(celsius);
+                    kelvin = temperatureConverter.celsiusToKelvin(celsius);
+                    formulas.fahrenheit = `(${inputValue} × 9/5) + 32`;
+                    formulas.kelvin = `${inputValue} + 273.15`;
+                    break;
+                    
+                case 'fahrenheit':
+                    fahrenheit = inputValue;
+                    celsius = temperatureConverter.fahrenheitToCelsius(fahrenheit);
+                    kelvin = temperatureConverter.fahrenheitToKelvin(fahrenheit);
+                    formulas.celsius = `(${inputValue} - 32) × 5/9`;
+                    formulas.kelvin = `(${inputValue} - 32) × 5/9 + 273.15`;
+                    break;
+                    
+                case 'kelvin':
+                    kelvin = inputValue;
+                    celsius = temperatureConverter.kelvinToCelsius(kelvin);
+                    fahrenheit = temperatureConverter.kelvinToFahrenheit(kelvin);
+                    formulas.celsius = `${inputValue} - 273.15`;
+                    formulas.fahrenheit = `(${inputValue} - 273.15) × 9/5 + 32`;
+                    break;
+            }
+
+            // Update results with animation
+            setTimeout(() => {
+                celsiusResult.textContent = `${celsius.toFixed(2)}°C`;
+                fahrenheitResult.textContent = `${fahrenheit.toFixed(2)}°F`;
+                kelvinResult.textContent = `${kelvin.toFixed(2)} K`;
+                
+                // Update formulas
+                celsiusFormula.textContent = formulas.celsius || 'Input value';
+                fahrenheitFormula.textContent = formulas.fahrenheit || 'Input value';
+                kelvinFormula.textContent = formulas.kelvin || 'Input value';
+                
+                // Update facts
+                temperatureFacts.textContent = getTemperatureFacts(celsius);
+            }, 100);
+
+            // Add visual feedback
+            convertBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Converted Successfully!';
+            convertBtn.classList.add('bg-green-500');
+            
+            setTimeout(() => {
+                convertBtn.innerHTML = '<i class="fas fa-sync-alt mr-2"></i>Convert Temperature';
+                convertBtn.classList.remove('bg-green-500');
+            }, 2000);
+        }
+
+        // Event listeners
+        convertBtn.addEventListener('click', convertTemperature);
+        
+        temperatureInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                convertTemperature();
+            }
+        });
+
+        temperatureInput.addEventListener('input', () => {
+            if (temperatureInput.value.trim() !== '') {
+                inputError.classList.add('hidden');
+            }
+        });
+
+        // Auto-convert on unit change
+        document.querySelectorAll('input[name="inputUnit"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (temperatureInput.value.trim() !== '' && !isNaN(temperatureInput.value)) {
+                    convertTemperature();
+                }
+            });
+        });
+
+        // Initialize with example conversion
+        temperatureInput.value = '25';
+        convertTemperature();
+    </script>
+</body>
+</html>
